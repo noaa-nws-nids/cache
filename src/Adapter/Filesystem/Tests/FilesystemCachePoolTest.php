@@ -11,12 +11,30 @@
 
 namespace Cache\Adapter\Filesystem\Tests;
 
+use Cache\Adapter\Filesystem\FilesystemCachePool;
+use Symfony\Bridge\PhpUnit\ClockMock;
+
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class FilesystemCachePoolTest extends \PHPUnit_Framework_TestCase
 {
     use CreatePoolTrait;
+
+    /**
+     * @var FilesystemCachePool
+     */
+    private $cache;
+
+
+    protected function setUp()
+    {
+        $this->cache = $this->createCachePool();
+
+        ClockMock::register(__CLASS__);
+        ClockMock::register(get_class($this->cache));
+        ClockMock::withClockMock(true);
+    }
 
     /**
      * @expectedException \Psr\Cache\InvalidArgumentException
@@ -30,15 +48,15 @@ class FilesystemCachePoolTest extends \PHPUnit_Framework_TestCase
 
     public function testCleanupOnExpire()
     {
-        $pool = $this->createCachePool();
+        $pool = $this->cache;
 
         $item = $pool->getItem('test_ttl_null');
         $item->set('data');
-        $item->expiresAt(new \DateTime('now'));
+        $item->expiresAt(\DateTime::createFromFormat('U', time() + 5));
         $pool->save($item);
         $this->assertTrue($this->getFilesystem()->has('cache/test_ttl_null'));
 
-        sleep(1);
+        sleep(10);
 
         $item = $pool->getItem('test_ttl_null');
         $this->assertFalse($item->isHit());

@@ -21,7 +21,7 @@
         }
     ],
     "repositories": [
-        { "type": "vcs", "url": "https://github.com/Nyholm/integration-tests"}
+        { "type": "vcs", "url": "https://github.com/jakzal/integration-tests"}
     ],
     "require":     {
         "php":              "^5.5|^7.0",
