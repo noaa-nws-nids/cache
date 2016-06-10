@@ -18,6 +18,17 @@
     </testsuite>
   </testsuites>
 
+  <listeners>
+    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
+      <arguments>
+        <array>
+          <element><string>Cache\Adapter</string></element>
+        </array>
+      </arguments>
+    </listener>
+  </listeners>
+
+
   <logging>
     <log type="coverage-text" target="php://stdout"/>
   </logging>
